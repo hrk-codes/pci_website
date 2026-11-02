@@ -1,0 +1,13 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "git.path": "C:\\Program Files\\Git\\cmd\\git.exe",
+  "terminal.integrated.env.windows": {
+    "PATH": "C:\\Program Files\\nodejs;C:\\Program Files\\Git\\cmd;${env:PATH}"
+  },
+  "code-runner.runInTerminal": true,
+  "code-runner.saveFileBeforeRun": true
+}

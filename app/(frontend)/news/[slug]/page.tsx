@@ -15,12 +15,12 @@ async function postBySlug(slug: string): Promise<PostRecord | null> {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const post = await postBySlug(slug)
-  return post ? { title: post.title, description: post.summary || undefined } : {}
+  return post ? { title: post.title, description: post.summary || undefined, alternates: { canonical: `/news/${slug}/` } } : {}
 }
 
 export default async function NewsPost({ params }: Props) {
   const { slug } = await params
   const post = await postBySlug(slug)
   if (!post) notFound()
-  return <main><PageHero title={post.title} eyebrow="PCI update" summary={post.summary} media={mediaValue(post.heroMedia)} /><section className="section"><div className="shell content-layout"><RichContent value={post.body} /><aside className="content-aside"><h3>More from PCI</h3><Link href="/news/">All news ↗</Link><Link href="/products/">Products ↗</Link><Link href="/contact-us/">Contact us ↗</Link></aside></div></section></main>
+  return <main id="main-content"><PageHero title={post.title} eyebrow="PCI update" summary={post.summary} media={mediaValue(post.heroMedia)} /><section className="page-section section-pad"><div className="shell content-layout"><RichContent value={post.body} summary={post.summary} /><aside className="content-aside"><h3>More from PCI</h3><Link href="/news/">All news ↗</Link><Link href="/products/">Products ↗</Link><Link href="/contact-us/">Contact us ↗</Link></aside></div></section></main>
 }

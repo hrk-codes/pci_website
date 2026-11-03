@@ -25,8 +25,13 @@ const recent = new Map<string, number>()
 
 export async function submitForm(request: Request, formType: 'contact' | 'vendor-registration') {
   const origin = request.headers.get('origin')
-  const expected = new URL(request.url).origin
-  if (origin && origin !== expected) return Response.json({ error: 'Invalid form origin.' }, { status: 403 })
+  const requestUrl = new URL(request.url)
+  const protocol = request.headers.get('x-forwarded-proto') || requestUrl.protocol.slice(0, -1)
+  const allowedOrigins = new Set([requestUrl.origin])
+  for (const host of [request.headers.get('host'), request.headers.get('x-forwarded-host')]) {
+    if (host) allowedOrigins.add(`${protocol}://${host}`)
+  }
+  if (origin && !allowedOrigins.has(origin)) return Response.json({ error: 'Invalid form origin.' }, { status: 403 })
   const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'local'
   const key = `${formType}:${ip}`
   const now = Date.now()

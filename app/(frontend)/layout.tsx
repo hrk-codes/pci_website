@@ -1,93 +1,40 @@
-﻿import type { Metadata } from 'next'
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
-import { cms, mediaValue } from '@/lib/site-data'
+import { SiteHeader } from '@/components/site-header'
 import { MediaImage } from '@/components/media'
+import { cms, mediaValue } from '@/lib/site-data'
 import './globals.css'
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://pcicablesindustries.com'
+
 export const metadata: Metadata = {
-  title: { default: 'PCI Cables Industries', template: '%s | PCI Cables Industries' },
-  description: 'Cable and conductor solutions from PCI Cables Industries.',
+  metadataBase: new URL(siteUrl),
+  title: { default: 'PCI Cables Industries | Cables & Conductors', template: '%s | PCI Cables Industries' },
+  description: 'PCI Cables Industries manufactures cables, overhead conductors and earth wire for electrical infrastructure in India and overseas.',
+  openGraph: { type: 'website', siteName: 'PCI Cables Industries', title: 'PCI Cables Industries', description: 'Cables and conductors for the networks that power progress.' },
 }
 
-const navigation = [
-  { label: 'Company', links: [
-    ['About us', '/about-us/'], ['Management', '/management/'], ['Certificates', '/certificates/'],
-    ['Clients', '/clients/'], ['Achievements', '/achievements/'], ['Turnover', '/turnover/'],
-  ] },
-  { label: 'Products', links: [
-    ['Overview', '/products/'], ['Cables', '/cables/'], ['Conductors', '/conductors/'], ['Earth wire', '/earth-wire/'],
-  ] },
-  { label: 'Capabilities', links: [
-    ['Testing facilities', '/testing/'], ['EPC & turnkey', '/epc/'], ['Gallery', '/gallery/'],
-  ] },
-  { label: 'Updates', links: [
-    ['News', '/news/'], ['Blog', '/blog/'], ['Press releases', '/press-releases/'],
-  ] },
-] as const
-
-async function Brand() {
+export default async function FrontendLayout({ children }: { children: ReactNode }) {
   const payload = await cms()
   const settings = await payload.findGlobal({ slug: 'site-settings', depth: 1 })
   const logo = mediaValue(settings.logo as Parameters<typeof mediaValue>[0])
+  const email = settings.contactEmail || 'info@pcicablesindustries.com'
 
-  return (
-    <Link href="/" className="brand" aria-label="PCI Cables home">
-      <span className="brand-mark">
-        <MediaImage media={logo} alt="" eager />
-      </span>
-      <span className="brand-name"><strong>PCI Cables</strong><small>Industries Pvt Ltd</small></span>
-    </Link>
-  )
+  return <html lang="en"><body id="top">
+    <a className="skip-link" href="#main-content">Skip to content</a>
+    <SiteHeader logo={logo} />
+    {children}
+    <footer className="site-footer">
+      <div className="shell footer-top">
+        <div className="footer-intro"><Link href="/" className="footer-brand"><span><MediaImage media={logo} alt="" size="card" /></span><strong>PCI Cables</strong></Link><p>Cable and conductor solutions for the power networks people depend on.</p><a href={`mailto:${email}`} className="footer-email">{email} ↗</a></div>
+        <div className="footer-links"><h3>Company</h3><Link href="/about-us/">About us</Link><Link href="/management/">Management</Link><Link href="/clients/">Clients</Link><Link href="/achievements/">Achievements</Link><Link href="/certificates/">Certificates</Link><Link href="/turnover/">Turnover</Link></div>
+        <div className="footer-links"><h3>Explore</h3><Link href="/products/">All products</Link><Link href="/cables/">Cables</Link><Link href="/conductors/">Conductors</Link><Link href="/earth-wire/">Earth wire</Link><Link href="/testing/">Testing facilities</Link><Link href="/epc/">EPC & turnkey</Link></div>
+        <div className="footer-links"><h3>Connect</h3><Link href="/contact-us/">Contact us</Link><Link href="/vendor-registration/">Vendor registration</Link><Link href="/career/">Careers</Link><Link href="/news/">News</Link><Link href="/gallery/">Gallery</Link><a href="tel:+919062207003">+91 90622 07003</a></div>
+      </div>
+      <div className="shell footer-address"><span>Registered office & works</span><p>Om Complex, Monber Sastitala, Beneras Road, PO-Mrigola, Dankuni, Hooghly 712311, West Bengal, India.</p></div>
+      <div className="shell footer-bottom"><span>© {new Date().getFullYear()} PCI Cables Industries Pvt Ltd</span><span>Designed for connection.</span></div>
+    </footer>
+    <div className="floating-actions"><Link href="/contact-us/" aria-label="Contact PCI Cables">Enquire <span aria-hidden="true">↗</span></Link><a href="#top" aria-label="Back to top">↑</a></div>
+  </body></html>
 }
-
-function Navigation({ mobile = false }: { mobile?: boolean }) {
-  return (
-    <nav aria-label={mobile ? 'Mobile navigation' : 'Main navigation'} className={mobile ? 'mobile-nav-links' : 'desktop-nav'}>
-      {navigation.map((group) => (
-        <details className="nav-group" key={group.label}>
-          <summary>{group.label}<span aria-hidden="true">⌄</span></summary>
-          <div className="nav-dropdown">
-            {group.links.map(([label, href]) => <Link href={href} key={href}>{label}</Link>)}
-          </div>
-        </details>
-      ))}
-      {mobile && <><Link href="/career/">Careers</Link><Link href="/vendor-registration/">Vendor registration</Link><Link href="/contact-us/">Contact</Link></>}
-    </nav>
-  )
-}
-
-export default function FrontendLayout({ children }: { children: ReactNode }) {
-  return (
-    <html lang="en">
-      <body>
-        <header className="site-header">
-          <div className="shell header-inner">
-            <Brand />
-            <Navigation />
-            <Link className="header-contact" href="/contact-us/">Let’s talk <span aria-hidden="true">↗</span></Link>
-            <details className="mobile-nav">
-              <summary aria-label="Open menu"><span></span><span></span><span></span></summary>
-              <Navigation mobile />
-            </details>
-          </div>
-        </header>
-        {children}
-        <footer className="site-footer">
-          <div className="shell footer-grid">
-            <div>
-              <p className="eyebrow">PCI Cables Industries</p>
-              <h2>Powering what comes next.</h2>
-              <p>Cable and conductor solutions for electrical infrastructure.</p>
-              <Link className="text-link" href="/contact-us/">Start a conversation <span aria-hidden="true">↗</span></Link>
-            </div>
-            <div><h3>Explore</h3><Link href="/products/">Products</Link><Link href="/about-us/">About us</Link><Link href="/testing/">Testing facilities</Link><Link href="/news/">News</Link></div>
-            <div><h3>Connect</h3><Link href="/contact-us/">Contact us</Link><Link href="/vendor-registration/">Vendor registration</Link><Link href="/career/">Careers</Link><a href="mailto:info@pcicablesindustries.com">info@pcicablesindustries.com</a></div>
-          </div>
-          <div className="shell footer-bottom"><span>© {new Date().getFullYear()} PCI Cables Industries Pvt Ltd</span><span>Built for clarity, performance and access.</span></div>
-        </footer>
-      </body>
-    </html>
-  )
-}
-

@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from 'react'
 
-export function SubmissionForm({ type }: { type: 'contact' | 'vendor-registration' }) {
+export function SubmissionForm({ type, compact = false }: { type: 'contact' | 'vendor-registration'; compact?: boolean }) {
   const [status, setStatus] = useState<{ error?: boolean; message: string } | null>(null)
   const [busy, setBusy] = useState(false)
   const vendor = type === 'vendor-registration'
@@ -14,7 +14,7 @@ export function SubmissionForm({ type }: { type: 'contact' | 'vendor-registratio
     const form = event.currentTarget
     const data = Object.fromEntries(new FormData(form).entries())
     try {
-      const response = await fetch(`/api/forms/${type}`, {
+      const response = await fetch(`/api/forms/${type}/`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data),
       })
       const result = await response.json()
@@ -27,10 +27,10 @@ export function SubmissionForm({ type }: { type: 'contact' | 'vendor-registratio
     }
   }
 
-  return <form className="form-panel" onSubmit={submit}>
-    <p className="eyebrow">{vendor ? 'Vendor registration' : 'Contact PCI Cables'}</p>
-    <h2 className="section-title">{vendor ? 'Tell us about your business.' : 'How can we help?'}</h2>
-    <p className="lead">{vendor ? 'Send your company details to the PCI team.' : 'Share your enquiry and the team will review it.'}</p>
+  return <form className={`form-panel${compact ? ' form-compact' : ''}`} onSubmit={submit} aria-busy={busy}>
+    {!compact && <><p className="kicker">{vendor ? 'Vendor registration' : 'Contact PCI Cables'}</p>
+    <h2>{vendor ? 'Tell us about your business.' : 'How can we help?'}</h2>
+    <p className="form-lead">{vendor ? 'Send your company details to the PCI team.' : 'Share your enquiry and the team will review it.'}</p></>}
     <div className="form-grid">
       <div className="form-field"><label htmlFor="form-name">Name *</label><input id="form-name" name="name" required maxLength={500} autoComplete="name" /></div>
       <div className="form-field"><label htmlFor="form-email">Email *</label><input id="form-email" name="email" type="email" required maxLength={254} autoComplete="email" /></div>
@@ -50,7 +50,7 @@ export function SubmissionForm({ type }: { type: 'contact' | 'vendor-registratio
       <div className="form-field full"><label htmlFor="form-message">{vendor ? 'Comments' : 'Message *'}</label><textarea id="form-message" name="message" required={!vendor} minLength={vendor ? undefined : 10} maxLength={5000} /></div>
       <div className="honeypot" aria-hidden="true"><label htmlFor="form-website">Website</label><input id="form-website" name="website" tabIndex={-1} autoComplete="off" /></div>
     </div>
-    <button className="button button-primary" type="submit" disabled={busy}>{busy ? 'Submitting…' : 'Send submission ↗'}</button>
+    <button className="button button-dark" type="submit" disabled={busy}>{busy ? 'Submitting…' : 'Send enquiry ↗'}</button>
     {status && <p className={`form-status${status.error ? ' error' : ''}`} role="status">{status.message}</p>}
   </form>
 }

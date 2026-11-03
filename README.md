@@ -2,6 +2,12 @@
 
 This project runs the public PCI Cables site and Payload CMS in one Next.js process. Published pages, products, posts, and media are served from local SQLite and local uploads. WordPress is used only by the optional import command.
 
+## Website design and content
+
+The public site follows the visual structure reviewed in the Dynamic Cables screen recording, using only PCI Cables text, product records, client logos, photos, and videos. The homepage layout is in `components/home.tsx`; shared page layouts are in `components/site-pages.tsx`; public styles are in `app/(frontend)/globals.css`. The CMS admin styling is separate.
+
+The content source is `data/pci.db`, with uploaded files in `data/media/`. Both stay under `C:\htdocs\pci-web\data` and are excluded from Git. To change page text, product details, client media, or the PCI logo later, use `/admin/`. Selected homepage images and the homepage video are currently chosen from the imported PCI media by filename in `components/home.tsx`; update those selections when new media is supplied. Homepage facts use the imported achievements and product records, so replace them with verified PCI figures when new numbers are available.
+
 ## Start in a Windows terminal
 
 ```powershell

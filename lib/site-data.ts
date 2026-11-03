@@ -2,18 +2,9 @@ import { convertLexicalToHTML } from '@payloadcms/richtext-lexical/html'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 import { getPayload, type Where } from 'payload'
 import config from '@payload-config'
-
-export type MediaAsset = {
-  id: number
-  url?: string | null
-  alt?: string | null
-  title?: string | null
-  mimeType?: string | null
-  filename?: string | null
-  width?: number | null
-  height?: number | null
-  sourceUrl?: string | null
-}
+import type { MediaAsset } from '@/lib/media'
+export { mediaValue, mediaUrl, assetUrl } from '@/lib/media'
+export type { MediaAsset } from '@/lib/media'
 
 export type PageRecord = {
   id: number
@@ -93,14 +84,22 @@ export async function allMedia(): Promise<MediaAsset[]> {
   return result.docs as unknown as MediaAsset[]
 }
 
-export function mediaValue(value?: MediaAsset | number | null): MediaAsset | null {
-  return value && typeof value === 'object' && value.url ? value : null
-}
-
-export function richTextHtml(value?: SerializedEditorState | null) {
+export function richTextHtml(value?: SerializedEditorState | null, summary?: string | null) {
   if (!value) return ''
   try {
-    return convertLexicalToHTML({ data: value })
+    const data = structuredClone(value)
+    const text = (node: unknown): string => {
+      if (!node || typeof node !== 'object') return ''
+      const value = node as { text?: unknown; children?: unknown }
+      if (typeof value.text === 'string') return value.text
+      return Array.isArray(value.children) ? value.children.map(text).join(' ') : ''
+    }
+    const nodes = data.root.children
+    const navigationStart = nodes.findIndex((node) => node.type === 'heading' && text(node).trim() === 'About Company')
+    const content = (navigationStart >= 0 ? nodes.slice(0, navigationStart) : nodes).filter((node) => !(node.type === 'heading' && text(node).trim() === 'Details'))
+    if (summary && content[0]?.type === 'paragraph' && text(content[0]).trim() === summary.trim()) content.shift()
+    data.root.children = content
+    return convertLexicalToHTML({ data })
   } catch {
     return ''
   }

@@ -1,56 +1,62 @@
-﻿import Link from 'next/link'
+import Link from 'next/link'
+import { ClientShowcase } from '@/components/client-showcase'
+import { HeroCarousel, type HeroSlide } from '@/components/hero-carousel'
 import { MediaImage } from '@/components/media'
+import { MilestoneTimeline } from '@/components/milestone-timeline'
 import { Reveal } from '@/components/reveal'
-import { allMedia, recentPosts, type MediaAsset } from '@/lib/site-data'
+import { SubmissionForm } from '@/components/submission-form'
+import { allMedia, mediaUrl, mediaValue, pageBySlug, productsByCategory, recentPosts } from '@/lib/site-data'
+import { clientGroups, contentParagraphs, findMedia, milestonesFromContent } from '@/lib/presentation'
 
-function pickMedia(media: MediaAsset[], filename: string) {
-  return media.find((item) => item.filename?.toLowerCase() === filename.toLowerCase()) || null
-}
+const featuredSlugs = ['eco-panther-conductor', 'lt-xlpe-cable', 'aerial-bunched-cable-ab-cable']
+const rangeSlugs = ['lt-xlpe-cable', 'aluminium-conductor-steel-reinforced-acsr', 'aerial-bunched-cable-ab-cable', 'control-cable', 'pvc-power-cable', 'all-aluminium-aloy-conductor-aaac', 'gi-earth-wire', 'eco-panther-conductor']
 
 export default async function Home() {
-  const [media, posts] = await Promise.all([allMedia(), recentPosts()])
-  const hero = pickMedia(media, 'product1.jpg')
-  const cable = pickMedia(media, 'cables-1.jpg') || hero
-  const conductor = pickMedia(media, 'conductors-2.jpg')
-  const earth = pickMedia(media, 'GI-Earth-Wire.jpg') || pickMedia(media, 'testing.jpg')
-  const testing = pickMedia(media, 'testing.jpg')
+  const [media, products, posts, about, achievements, clients, testing] = await Promise.all([
+    allMedia(), productsByCategory(), recentPosts(), pageBySlug('about-us'), pageBySlug('achievements'), pageBySlug('clients'), pageBySlug('testing'),
+  ])
+  const find = (filename: string) => findMedia(media, filename)
+  const slides: HeroSlide[] = [
+    { image: mediaUrl(find('product1.jpg'), 'hero') || '', label: 'PCI Cables Industries', title: 'The power behind every connection.', description: 'Cables and overhead conductors for the electrical networks that move India forward.', href: '/products/', action: 'Explore our products' },
+    { image: mediaUrl(find('image-03.jpg'), 'hero') || '', label: 'Made in West Bengal', title: 'Built with purpose. Made to perform.', description: about?.summary || 'Discover the people, facilities and standards behind PCI Cables.', href: '/about-us/', action: 'Discover PCI' },
+    { image: mediaUrl(find('front.jpg'), 'hero') || '', label: 'Power infrastructure', title: 'Engineered for what comes next.', description: 'Explore cables, conductors and earth wire for distribution and transmission.', href: '/testing/', action: 'See our capabilities' },
+  ].filter((slide) => Boolean(slide.image))
+  const aboutParagraphs = contentParagraphs(about?.body)
+  const aboutIntro = aboutParagraphs.find((line) => line.startsWith('PCI Cables is one of the leading')) || about?.summary || ''
+  const milestones = milestonesFromContent(achievements?.body)
+  const featured = featuredSlugs.map((slug) => products.find((product) => product.slug === slug)).filter((product) => Boolean(product))
+  const range = rangeSlugs.map((slug) => products.find((product) => product.slug === slug)).filter((product) => Boolean(product))
+  const groups = clientGroups(media)
+  const video = media.find((item) => item.filename?.startsWith('INDIAS-LEADING-CABLE-CONDUCTOR-MANUFACTURER'))
+  const videoPoster = find('image-03.jpg')
+  const families = new Set(products.map((product) => product.category)).size
 
-  return <main>
-    <section className="hero">
-      <MediaImage media={hero} alt="PCI cable products" className="hero-photo" eager />
-      <div className="hero-grid" aria-hidden="true" />
-      <div className="hero-orbit" aria-hidden="true" />
-      <div className="shell hero-inner">
-        <div className="hero-copy">
-          <p className="eyebrow">PCI Cables Industries Pvt Ltd</p>
-          <h1 className="display">Built to carry <span>progress.</span></h1>
-          <p className="hero-lead">Cable, conductor and earth wire solutions for the electrical networks people depend on.</p>
-          <div className="hero-actions">
-            <Link className="button button-primary" href="/products/">Explore products <span aria-hidden="true">↗</span></Link>
-            <Link className="button button-ghost" href="/about-us/">Discover PCI <span aria-hidden="true">↗</span></Link>
-          </div>
-        </div>
-        <div className="hero-index">Engineered for connection / 01</div>
-      </div>
-    </section>
-    <div className="ticker"><div className="shell ticker-inner"><span>Cables</span><span>Conductors</span><span>Earth wire</span><span>Testing</span><span>Infrastructure</span></div></div>
-    <section className="section" id="products"><div className="shell">
-      <Reveal className="section-head"><div><p className="eyebrow">What we make</p><h2 className="section-title">Solutions for every connection.</h2></div><p className="lead">Browse the product families PCI Cables supplies for power infrastructure and distribution.</p></Reveal>
-      <div className="product-grid">
-        {([
-          { title: 'Cables', slug: 'cables', image: cable, description: 'Power, control, aerial bunched and service cable ranges.' },
-          { title: 'Conductors', slug: 'conductors', image: conductor, description: 'Overhead conductor families for transmission and distribution.' },
-          { title: 'Earth wire', slug: 'earth-wire', image: earth, description: 'GI earth wire information for overhead line applications.' },
-        ] as const).map((item, index) => <Reveal key={item.slug} delay={index * 90}><Link href={`/${item.slug}/`} className="product-card"><MediaImage media={item.image} alt={item.title} /><div className="product-card-content"><span className="eyebrow">0{index + 1} / Product family</span><h3>{item.title}</h3><p>{item.description}</p><span className="arrow-circle" aria-hidden="true">↗</span></div></Link></Reveal>)}
-      </div>
+  return <main id="main-content">
+    <HeroCarousel slides={slides} />
+
+    <section className="intro-section section-pad"><div className="shell intro-grid">
+      <Reveal className="intro-visual"><div className="intro-frame"><MediaImage media={find('image-03.jpg')} alt="Inside the PCI Cables manufacturing facility" size="hero" /></div><span className="intro-caption">Manufacturing in West Bengal, India</span></Reveal>
+      <Reveal className="intro-copy" delay={100}><p className="kicker">About PCI Cables</p><h2>Building confidence into every connection<span>.</span></h2><p className="intro-lead">{about?.summary}</p><p>{aboutIntro.length > 460 ? `${aboutIntro.slice(0, 457).trimEnd()}…` : aboutIntro}</p><Link href="/about-us/" className="button button-outline">Our story <span aria-hidden="true">↗</span></Link></Reveal>
     </div></section>
-    <section className="section section-light"><div className="shell feature-split">
-      <Reveal className="feature-visual"><MediaImage media={testing} alt="PCI testing facilities" /></Reveal>
-      <Reveal className="feature-copy"><p className="eyebrow">Inside PCI</p><h2 className="section-title">Made with purpose. Checked with care.</h2><p className="lead">Explore the facilities and testing capabilities behind PCI Cables&apos; products, alongside the certificates published by the company.</p><ul className="feature-list"><li><span>01</span> Product focused manufacturing</li><li><span>02</span> Testing and quality checks</li><li><span>03</span> Documentation and certifications</li></ul><div className="button-row"><Link href="/testing/" className="button button-dark">Explore facilities <span aria-hidden="true">↗</span></Link><Link href="/certificates/" className="button">View certificates <span aria-hidden="true">↗</span></Link></div></Reveal>
-    </div></section>
-    <section className="section section-dark"><div className="shell"><Reveal><p className="eyebrow">Our company</p><h2 className="section-title">Connected to the work that moves us forward.</h2><p className="lead">From electrical networks to public infrastructure, PCI Cables shares its product range, clients and company milestones in one place.</p></Reveal><div className="proof-grid"><div className="proof-item"><span>01 / COMPANY</span><h3>Our story</h3><p>Discover the people and background of PCI Cables Industries.</p><Link href="/about-us/" className="text-link">About us ↗</Link></div><div className="proof-item"><span>02 / WORK</span><h3>Our clients</h3><p>Explore organizations and sectors featured in PCI&apos;s records.</p><Link href="/clients/" className="text-link">View clients ↗</Link></div><div className="proof-item"><span>03 / PROGRESS</span><h3>Our milestones</h3><p>Follow the developments recorded by the company.</p><Link href="/achievements/" className="text-link">See achievements ↗</Link></div></div></div></section>
-    {posts.length > 0 && <section className="section"><div className="shell"><div className="section-head"><div><p className="eyebrow">From PCI</p><h2 className="section-title">The latest connections.</h2></div><Link href="/news/" className="text-link">All updates ↗</Link></div><div className="updates-grid">{posts.slice(0, 3).map((post) => <Link href={`/news/${post.slug}/`} className="update-card" key={post.id}><p className="eyebrow">Company update</p><h3>{post.title}</h3><p>{post.summary}</p><span className="arrow-circle" aria-hidden="true">↗</span></Link>)}</div></div></section>}
-    <section className="cta-band"><div className="shell cta-band-inner"><div><p className="eyebrow" style={{ color: '#543212' }}>Let&apos;s connect</p><h2 className="section-title">Have a project in mind? Let&apos;s talk.</h2></div><Link className="button button-dark" href="/contact-us/">Contact PCI Cables <span aria-hidden="true">↗</span></Link></div></section>
+
+    <section className="spotlight-section section-pad"><div className="shell"><div className="center-heading"><p className="kicker">From our product range</p><h2>Featured solutions</h2><p>Explore selected products from PCI&apos;s cable and conductor portfolio.</p></div><div className="spotlight-grid">{featured.map((product, index) => product && <Reveal key={product.id} delay={index * 70}><Link href={`/products/${product.slug}/`} className="spotlight-card"><span className="spotlight-image"><MediaImage media={mediaValue(product.image)} alt={product.title} size="card" /></span><span className="spotlight-body"><small>0{index + 1} / {product.category.replace('-', ' ')}</small><strong>{product.title}</strong><span className="card-link">View product ↗</span></span></Link></Reveal>)}</div></div></section>
+
+    <section className="reach-section section-pad"><div className="shell reach-grid"><div className="reach-copy"><p className="kicker light">Our reach</p><h2>From West Bengal to wider horizons.</h2><p>{achievements?.summary}</p><div className="reach-locations"><span>India</span><span>Uganda</span><span>Nepal</span></div><Link href="/achievements/" className="text-link light">Explore our milestones <span aria-hidden="true">↗</span></Link></div><div className="globe-stage" role="img" aria-label="Illustrated globe showing PCI Cables' India base and export milestones in Uganda and Nepal"><div className="globe-halo" /><div className="globe-sphere"><i className="globe-lat lat-one" /><i className="globe-lat lat-two" /><i className="globe-lat lat-three" /><i className="globe-meridian meridian-one" /><i className="globe-meridian meridian-two" /><i className="globe-meridian meridian-three" /><span className="globe-pin pin-india">India</span><span className="globe-pin pin-uganda">Uganda</span><span className="globe-pin pin-nepal">Nepal</span></div><div className="globe-orbit" /></div></div></section>
+
+    <section className="range-section section-pad"><div className="shell"><div className="section-heading"><div><p className="kicker">What we make</p><h2>Explore the range<span>.</span></h2></div><p>From power and control cables to overhead conductors, each product has a purpose in the network.</p></div><div className="range-grid">{range.map((product) => product && <Link href={`/products/${product.slug}/`} className="range-card" key={product.id}><div className="range-image"><MediaImage media={mediaValue(product.image)} alt={product.title} size="card" /></div><div className="range-label"><span>{product.title}</span><span aria-hidden="true">↗</span></div></Link>)}</div><div className="center-action"><Link href="/products/" className="button button-accent">View all {products.length} products <span aria-hidden="true">↗</span></Link></div></div></section>
+
+    <section className="facts-section section-pad"><div className="shell"><div className="center-heading"><p className="kicker">PCI at a glance</p><h2>Built on steady progress.</h2></div><div className="facts-grid"><div><strong>2013</strong><span>Our journey began</span></div><div><strong>{products.length}</strong><span>Products in the catalog</span></div><div><strong>{families}</strong><span>Core product families</span></div><div><strong>2</strong><span>Recorded export milestones</span></div></div></div></section>
+
+    <section className="clients-section section-pad"><div className="shell"><div className="center-heading"><p className="kicker">Where our work connects</p><h2>Our clients and partners.</h2><p>{clients?.summary}</p></div><ClientShowcase groups={groups} /><div className="center-action"><Link href="/clients/" className="text-link">Explore all clients <span aria-hidden="true">↗</span></Link></div></div></section>
+
+    <section className="quality-section section-pad"><div className="shell quality-grid"><div className="quality-image"><MediaImage media={find('testing.jpg')} alt="PCI Cables testing equipment" size="hero" /></div><div className="quality-copy"><p className="kicker">Quality at every stage</p><h2>Tested with care. Ready for the real world.</h2><p>{testing?.summary}</p><div className="quality-links"><Link href="/testing/" className="button button-accent">Testing facilities <span aria-hidden="true">↗</span></Link><Link href="/certificates/" className="text-link">View certificates ↗</Link></div></div></div></section>
+
+    {milestones.length > 0 && <section className="milestones-section section-pad"><div className="shell"><div className="center-heading"><p className="kicker">Our journey</p><h2>Milestones that move us.</h2><p>{achievements?.summary}</p></div><MilestoneTimeline milestones={milestones} /><div className="center-action"><Link href="/achievements/" className="text-link">View the full story ↗</Link></div></div></section>}
+
+    {video?.url && <section className="video-section"><div className="shell video-grid"><div><p className="kicker light">Inside PCI</p><h2>See the work behind the wires.</h2><p>Get a closer look at PCI Cables through a video from the company archive.</p><Link href="/gallery/" className="text-link light">Explore the gallery ↗</Link></div><video controls preload="none" playsInline poster={mediaUrl(videoPoster, 'hero')} aria-label={video.title || 'PCI Cables company video'}><source src={mediaUrl(video)} type="video/mp4" />Your browser does not support HTML video.</video></div></section>}
+
+    {posts.length > 0 && <section className="news-section section-pad"><div className="shell"><div className="section-heading"><div><p className="kicker">Latest from PCI</p><h2>News & updates<span>.</span></h2></div><Link href="/news/" className="text-link">View all news ↗</Link></div><div className="news-grid">{posts.slice(0, 3).map((post) => <Link href={`/news/${post.slug}/`} className="news-card" key={post.id}><div className="news-image"><MediaImage media={mediaValue(post.heroMedia)} alt={post.title} size="card" /></div><div className="news-copy"><span>{post.publishedAt ? new Intl.DateTimeFormat('en-IN', { dateStyle: 'medium' }).format(new Date(post.publishedAt)) : 'PCI update'}</span><h3>{post.title}</h3><span className="card-link">Read story ↗</span></div></Link>)}</div></div></section>}
+
+    <section className="inquiry-section section-pad"><div className="shell inquiry-grid"><div className="inquiry-copy"><p className="kicker light">Start a conversation</p><h2>Have a cable or conductor requirement?</h2><p>Tell the PCI team about your project and your enquiry will be saved for review.</p><div className="inquiry-contact"><span>Email</span><a href="mailto:info@pcicablesindustries.com">info@pcicablesindustries.com</a><span>Sales & marketing</span><a href="tel:+919062207003">+91 90622 07003</a></div></div><SubmissionForm type="contact" compact /></div></section>
   </main>
 }
-

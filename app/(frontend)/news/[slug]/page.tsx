@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { AmbientWiring } from '@/components/ambient-wiring'
 import { notFound } from 'next/navigation'
 import { PageHero, RichContent } from '@/components/site-pages'
 import { cms, mediaValue, type PostRecord } from '@/lib/site-data'
@@ -22,5 +23,5 @@ export default async function NewsPost({ params }: Props) {
   const { slug } = await params
   const post = await postBySlug(slug)
   if (!post) notFound()
-  return <main id="main-content"><PageHero title={post.title} eyebrow="PCI update" summary={post.summary} media={mediaValue(post.heroMedia)} /><section className="page-section section-pad"><div className="shell content-layout"><RichContent value={post.body} summary={post.summary} /><aside className="content-aside"><h3>More from PCI</h3><Link href="/news/">All news ↗</Link><Link href="/products/">Products ↗</Link><Link href="/contact-us/">Contact us ↗</Link></aside></div></section></main>
+  return <main id="main-content"><PageHero title={post.title} eyebrow="PCI update" summary={post.summary} media={mediaValue(post.heroMedia)} /><section className="page-section section-pad ambient-surface"><AmbientWiring variant="b" /><div className="shell content-layout"><RichContent value={post.body} summary={post.summary} /><aside className="content-aside"><h3>More from PCI</h3><Link href="/news/">All news ↗</Link><Link href="/products/">Products ↗</Link><Link href="/contact-us/">Contact us ↗</Link></aside></div></section></main>
 }

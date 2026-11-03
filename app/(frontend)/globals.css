@@ -330,3 +330,37 @@ h2{font-size:clamp(2.2rem,4.3vw,4.7rem);line-height:1.04;letter-spacing:-.055em}
 @media(max-width:620px){html{scroll-padding-top:78px}.shell{width:min(100% - 32px,1240px)}.section-pad{padding:65px 0}.utility-inner{min-height:28px;justify-content:center;text-align:center;font-size:.59rem}.utility-inner>div{display:none}.header-inner{min-height:66px}.brand-mark{width:43px;height:43px}.brand-name strong{font-size:1.04rem}.brand-name small{font-size:.56rem}.mobile-menu{max-height:calc(100dvh - 94px)}.hero-carousel{height:610px}.hero-content{padding-bottom:40px}.hero-content h1{font-size:clamp(3.05rem,12vw,4.8rem)}.hero-description{margin:18px 0 25px;font-size:1rem}.hero-controls{bottom:20px}.hero-arrows button{width:35px;height:35px}.intro-grid{gap:45px}.intro-visual{padding:0 17px 17px 0}.intro-visual:before{left:17px;top:17px;border-width:6px}.intro-frame{aspect-ratio:4/3}.intro-caption{font-size:.54rem;padding:10px}.spotlight-grid,.news-grid,.listing-grid,.media-grid{grid-template-columns:1fr}.spotlight-image{height:260px}.reach-copy h2{font-size:clamp(2.5rem,10vw,4rem)}.globe-stage{min-height:335px}.globe-sphere{width:min(78vw,310px)}.globe-orbit{width:88vw;height:120px}.range-grid{grid-template-columns:repeat(2,1fr);gap:10px}.range-card{aspect-ratio:1/1.35}.range-label{min-height:55px;padding:9px;font-size:.67rem}.range-label span:last-child{font-size:.85rem}.section-heading{display:block}.section-heading>p,.section-heading>.text-link{display:block;margin-top:18px}.facts-grid>div{min-height:135px;padding:18px}.facts-grid strong{font-size:2.5rem}.facts-grid span{font-size:.67rem}.client-tabs{display:grid;grid-template-columns:1fr 1fr}.client-tabs button{min-width:0;font-size:.65rem;border-bottom:1px solid var(--line)}.client-panel{grid-template-columns:repeat(3,1fr);gap:8px}.client-logo{min-height:80px;padding:9px}.client-logo img{max-height:52px}.quality-image,.quality-image img{height:280px}.milestone-feature{grid-template-columns:1fr;gap:7px;padding:22px}.milestone-feature span{font-size:2.3rem}.video-section{padding:60px 0}.form-grid{grid-template-columns:1fr}.form-field.full{grid-column:auto}.form-panel{padding:25px 18px}.page-hero{min-height:315px}.page-hero-content{padding:50px 0 40px}.breadcrumbs{margin-bottom:25px}.page-hero h1{font-size:clamp(2.7rem,11vw,4.5rem)}.page-hero-summary{font-size:.94rem}.about-page-image img{height:280px}.category-heading{font-size:1.1rem}.product-anchor-nav{top:94px}.product-anchor-nav .shell{gap:19px}.product-anchor-nav a{font-size:.68rem}.datasheet-inner,.product-enquiry-inner{display:block}.datasheet-inner .button,.product-enquiry-inner .button{margin-top:20px}.footer-top{grid-template-columns:1fr 1fr;gap:30px;padding:60px 0 30px}.footer-intro{grid-column:1/-1}.footer-address{display:block}.footer-address p{margin-top:10px}.footer-bottom{display:block}.footer-bottom span{display:block;margin:5px 0}.floating-actions{right:10px;bottom:10px}.floating-actions a:first-child{display:none}}
 @media(max-width:390px){.range-grid{grid-template-columns:1fr}.range-card{aspect-ratio:1.45/1}.client-tabs{grid-template-columns:1fr}.client-panel{grid-template-columns:repeat(2,1fr)}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.hero-slide>img,.hero-slide.is-active>img{transform:none}.button:hover,.range-card:hover,.spotlight-card:hover,.listing-card:hover,.news-card:hover,.client-logo:hover{transform:none}}
+
+/* Industry line art and a calm steel-blue palette for light content areas. */
+section.ambient-surface{position:relative;isolation:isolate;background:radial-gradient(circle at 5% 12%,rgba(133,189,197,.19),transparent 30%),radial-gradient(circle at 97% 86%,rgba(224,169,150,.11),transparent 28%),linear-gradient(130deg,#fcfdfb 0%,#eef6f5 52%,#f8faf9 100%)}
+section.spotlight-section.ambient-surface,section.facts-section.ambient-surface,section.quality-section.ambient-surface{background:radial-gradient(circle at 92% 9%,rgba(111,170,184,.16),transparent 30%),linear-gradient(135deg,#edf5f5 0%,#f7faf8 50%,#e8f2f2 100%)}
+section.ambient-surface>.shell{position:relative;z-index:1}
+.ambient-wiring{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;contain:paint;background:radial-gradient(circle at 8% 13%,rgba(83,155,169,.08),transparent 25%),radial-gradient(circle at 90% 78%,rgba(209,117,108,.055),transparent 28%)}
+.ambient-wiring--b{transform:scaleX(-1)}
+.ambient-wiring::before,.ambient-wiring::after{content:"";position:absolute;width:min(50vw,580px);aspect-ratio:1;border:1px solid rgba(63,128,143,.13);border-radius:50%;box-shadow:0 0 0 48px rgba(91,158,170,.025),0 0 0 112px rgba(91,158,170,.018)}
+.ambient-wiring::before{top:-410px;right:-180px}
+.ambient-wiring::after{bottom:-440px;left:-220px;border-color:rgba(217,125,113,.11)}
+.ambient-icon{position:absolute;display:block;width:80px;height:80px;color:#367d8d;opacity:.22;animation:ambient-drift 9s ease-in-out infinite alternate}
+.ambient-icon:nth-child(3n){color:#c57772;opacity:.17;animation-duration:11s}
+.ambient-icon:nth-child(4n){color:#537e8a;opacity:.16;animation-duration:13s}
+.ambient-icon:nth-child(even){animation-delay:-5s}
+.ambient-icon--coil{top:8%;left:2.5%;width:110px;height:110px}
+.ambient-icon--connector{top:14%;right:2%;width:88px;height:88px}
+.ambient-icon--core{top:48%;left:12%;width:62px;height:62px}
+.ambient-icon--strand{top:60%;right:11%;width:105px;height:105px}
+.ambient-icon--terminal{top:8%;left:44%;width:58px;height:58px}
+.ambient-icon--spool{top:43%;right:33%;width:68px;height:68px}
+.ambient-icon--plug{bottom:7%;left:3%;width:78px;height:78px}
+.ambient-icon--wave{bottom:4%;right:3%;width:115px;height:115px}
+.ambient-icon--link{bottom:8%;left:48%;width:60px;height:60px}
+.ambient-icon--pylon{top:27%;left:6%;width:95px;height:95px}
+.ambient-icon--insulator{top:31%;right:19%;width:65px;height:65px}
+.ambient-icon--junction{top:69%;left:26%;width:67px;height:67px}
+.ambient-icon--gland{top:25%;right:3%;width:78px;height:78px}
+.ambient-icon--lug{top:78%;right:28%;width:72px;height:72px}
+.ambient-icon--braid{top:19%;left:32%;width:84px;height:84px}
+.ambient-icon--switch{top:54%;right:2%;width:69px;height:69px}
+.ambient-icon--shield{top:75%;left:7%;width:66px;height:66px}
+.ambient-icon--bolt{top:70%;right:45%;width:55px;height:55px}
+@keyframes ambient-drift{0%{transform:translate3d(-3px,5px,0) rotate(-3deg)}50%{transform:translate3d(7px,-7px,0) rotate(3deg)}100%{transform:translate3d(-5px,-12px,0) rotate(-2deg)}}
+@media(max-width:700px){.ambient-icon{opacity:.15;animation-duration:12s}.ambient-icon:nth-child(3n){opacity:.11}.ambient-icon--terminal,.ambient-icon--spool,.ambient-icon--link,.ambient-icon--braid,.ambient-icon--gland,.ambient-icon--bolt{display:none}.ambient-icon--coil{left:-30px}.ambient-icon--connector{right:-28px}.ambient-icon--core{left:2%}.ambient-icon--strand{right:-25px}.ambient-icon--plug{left:-18px}.ambient-icon--wave{right:-35px}.ambient-icon--pylon{left:-24px}.ambient-icon--insulator{right:3%}.ambient-icon--junction{left:4%}.ambient-icon--switch{right:-17px}.ambient-icon--shield{left:-14px}.ambient-wiring::before{right:-280px}.ambient-wiring::after{left:-300px}}

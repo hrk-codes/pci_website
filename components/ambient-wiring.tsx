@@ -43,8 +43,8 @@ function WiringIcon({ motif }: { motif: Motif }) {
   }
 }
 
-export function AmbientWiring({ variant = 'a' }: { variant?: 'a' | 'b' }) {
-  return <div className={`ambient-wiring ambient-wiring--${variant}`} aria-hidden="true">
+export function AmbientWiring() {
+  return <div className="ambient-wiring" aria-hidden="true">
     {motifs.map((motif) => <svg className={`ambient-icon ambient-icon--${motif}`} key={motif} viewBox="0 0 80 80" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" focusable="false"><WiringIcon motif={motif} /></svg>)}
   </div>
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
+import { AmbientWiring } from '@/components/ambient-wiring'
 import { SiteHeader } from '@/components/site-header'
 import { MediaImage } from '@/components/media'
 import { cms, mediaValue } from '@/lib/site-data'
@@ -23,6 +24,7 @@ export default async function FrontendLayout({ children }: { children: ReactNode
 
   return <html lang="en"><body id="top">
     <a className="skip-link" href="#main-content">Skip to content</a>
+    <AmbientWiring />
     <SiteHeader logo={logo} />
     {children}
     <footer className="site-footer">

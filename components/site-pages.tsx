@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { AmbientWiring } from "@/components/ambient-wiring";
 import { ClientShowcase } from "@/components/client-showcase";
 import { MediaImage } from "@/components/media";
 import { MilestoneTimeline } from "@/components/milestone-timeline";
@@ -245,7 +244,6 @@ export function PageBody({
       />
       {isContact || isVendor ? (
         <section className="page-section section-pad ambient-surface">
-          <AmbientWiring variant="b" />
           <div className="shell contact-page-grid">
             <div className="contact-page-copy">
               <p className="kicker">Connect with PCI</p>
@@ -262,7 +260,6 @@ export function PageBody({
 
       {page.slug === "about-us" && (
         <section className="page-section section-pad ambient-surface">
-          <AmbientWiring variant="b" />
           <div className="shell about-page-grid">
             <div className="about-page-image">
               <MediaImage
@@ -285,7 +282,6 @@ export function PageBody({
 
       {page.slug === "achievements" && (
         <section className="page-section section-pad ambient-surface">
-          <AmbientWiring variant="b" />
           <div className="shell">
             <div className="center-heading">
               <p className="kicker">Our journey</p>
@@ -299,7 +295,6 @@ export function PageBody({
 
       {page.slug === "clients" && (
         <section className="page-section section-pad ambient-surface">
-          <AmbientWiring variant="b" />
           <div className="shell">
             <div className="center-heading">
               <p className="kicker">Our connections</p>
@@ -313,7 +308,6 @@ export function PageBody({
 
       {isProductPage && products && (
         <section className="page-section section-pad ambient-surface">
-          <AmbientWiring variant="b" />
           <div className="shell">
             <div className="page-intro">
               <p className="kicker">PCI product range</p>
@@ -350,7 +344,6 @@ export function PageBody({
 
       {isNews && posts && (
         <section className="page-section section-pad ambient-surface">
-          <AmbientWiring variant="b" />
           <div className="shell">
             <div className="page-intro">
               <p className="kicker">Stories from PCI</p>
@@ -368,7 +361,6 @@ export function PageBody({
 
       {page.slug === "gallery" && (
         <section className="page-section section-pad ambient-surface">
-          <AmbientWiring variant="b" />
           <div className="shell">
             <div className="page-intro">
               <p className="kicker">PCI archive</p>
@@ -389,7 +381,6 @@ export function PageBody({
         !isNews &&
         page.slug !== "gallery" && (
           <section className="page-section section-pad ambient-surface">
-            <AmbientWiring variant="b" />
             <div className="shell content-layout">
               <div>
                 <p className="kicker">PCI Cables Industries</p>
